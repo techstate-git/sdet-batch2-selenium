@@ -1,16 +1,19 @@
 package stepDefinitions;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import pages.HomePage;
+import pages.SearchResultsPage;
 import utils.DriverManager;
 
 public class SearchSteps {
     WebDriver driver = DriverManager.getDriver();
     HomePage homePage = new HomePage(driver);
+    SearchResultsPage searchResultsPage = new SearchResultsPage(driver);
 
     @Given("I am on the eBay homepage")
     public void ebayHomePage() throws InterruptedException {
@@ -36,10 +39,9 @@ public class SearchSteps {
             System.out.println("The Strings are not equal");
         }
     }
+
+    @And("I apply a price filter from {string} to {string}")
+    public void applyPriceFilter(String from, String to) {
+        searchResultsPage.applyPriceFilter(from, to);
+    }
 }
-
-
-
-
-
-
