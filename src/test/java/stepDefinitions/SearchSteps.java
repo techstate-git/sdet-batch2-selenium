@@ -15,10 +15,12 @@ public class SearchSteps {
     HomePage homePage = new HomePage(driver);
     SearchResultsPage searchResultsPage = new SearchResultsPage(driver);
 
+    private String minPrice;
+    private String maxPrice;
+
     @Given("I am on the eBay homepage")
     public void ebayHomePage() throws InterruptedException {
         driver.get("https://www.ebay.com/");
-        Thread.sleep(5000);
     }
 
     @When("I search for {string}")
@@ -42,6 +44,32 @@ public class SearchSteps {
 
     @And("I apply a price filter from {string} to {string}")
     public void applyPriceFilter(String from, String to) {
+        this.minPrice = from;
+        this.maxPrice = to;
         searchResultsPage.applyPriceFilter(from, to);
     }
+
+    @Then("I should see search results within the price range")
+    public void setSearchResultsPage(){
+        int min = Integer.parseInt(minPrice);
+        int max = Integer.parseInt(maxPrice);
+        Assert.assertTrue(searchResultsPage.areResultsWithinPriceRange(min, max));
+    }
+
+    @And("I sort the results by {string}")
+    public void sortTheResultsBy(String option) {
+        searchResultsPage.sortResultsBy(option);
+    }
+
+    @Then("I should see results sorted from lowest to highest price")
+    public void seeSortedResultsLowToHigh() {
+        Assert.assertTrue("The results are sorted correctly!", searchResultsPage.arePricesSortedLowToHigh());
+    }
 }
+
+
+
+
+
+
+
