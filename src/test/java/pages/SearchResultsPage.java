@@ -32,6 +32,9 @@ public class SearchResultsPage {
     @FindBy(xpath = "//button[@aria-label='Sort selector. Best Match selected.']")
     private WebElement sortDropDown;
 
+    @FindBy(xpath = "//ul[@class='srp-results srp-grid clearfix']//div[@class='s-item__info clearfix']/a//span[@role='heading']")
+    private List<WebElement> item_title;
+
     public SearchResultsPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -103,6 +106,30 @@ public class SearchResultsPage {
         }
 
         return true;
+    }
+
+    public void selectCategory(String category){
+        //ul[@class='srp-refine__category__list']//li/span[contains(text(),'"+ category +"')]
+        WebElement categoryElement = driver.findElement(By.xpath("//span[text()='" + category + "']"));
+        categoryElement.click();
+    }
+
+    public void selectBrand(String brand){
+        //div[@class="x-refine__multi-select"]//span[text()='Jordan']
+        WebElement categoryElement = driver.findElement(By.xpath("//div[@class='x-refine__multi-select']//span[text()='" + brand + "']"));
+        categoryElement.click();
+    }
+
+    public boolean verifyContainsJordan(String brand) {
+        for (WebElement element : item_title) {
+            String elementTitleText = element.getText();
+            if (elementTitleText.contains(brand)) {
+                return true;
+            } else {
+                System.out.println("Invalid Title: " + elementTitleText);
+            }
+        }
+        return false;
     }
 }
 

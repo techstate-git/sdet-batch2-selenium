@@ -17,6 +17,12 @@ Feature: Search Products on eBay
     And I sort the results by "Price + Shipping: lowest first"
     Then I should see results sorted from lowest to highest price
 
+  Scenario: Search and navigate to a specific category
+    Given I am on the eBay homepage
+    When I search for "sneakers"
+    And I filter the results by category "Men"
+    And I filter the results by Brand "Jordan"
+    Then I should verify that results contains brand "Jordan" on each item
 
 
 

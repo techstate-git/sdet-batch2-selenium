@@ -65,6 +65,21 @@ public class SearchSteps {
     public void seeSortedResultsLowToHigh() {
         Assert.assertTrue("The results are sorted correctly!", searchResultsPage.arePricesSortedLowToHigh());
     }
+
+    @And("I filter the results by category {string}")
+    public void filterByCategory(String category) {
+        searchResultsPage.selectCategory(category);
+    }
+
+    @And("I filter the results by Brand {string}")
+    public void filterByBrand(String brand) {
+        searchResultsPage.selectBrand(brand);
+    }
+
+    @Then("I should verify that results contains brand {string} on each item")
+    public void verifyItemTitleHasContainingText(String brand) {
+        searchResultsPage.verifyContainsJordan(brand);
+    }
 }
 
 
