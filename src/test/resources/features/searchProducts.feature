@@ -24,12 +24,9 @@ Feature: Search Products on eBay
     And I filter the results by Brand "Jordan"
     Then I should verify that results contains brand "Jordan" on each item
 
-
-
-
-
-
-
-
-
-
+  Scenario: Validate product details and specifications
+    Given I am on the eBay homepage
+    When I search for "camera"
+    And I click on the first product
+    Then I should verify that the product title contains "camera"
+    And I should verify that the product specifications are displayed

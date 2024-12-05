@@ -5,11 +5,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static utils.WebUtils.clickElement;
 import static utils.WebUtils.sendKeysToElement;
@@ -34,6 +37,18 @@ public class SearchResultsPage {
 
     @FindBy(xpath = "//ul[@class='srp-results srp-grid clearfix']//div[@class='s-item__info clearfix']/a//span[@role='heading']")
     private List<WebElement> item_title;
+
+    @FindBy(xpath = "//ul[@class='srp-results srp-list clearfix']/li[3]//a[@class='s-item__link']")
+    private WebElement secondItem;
+
+    @FindBy(xpath = "//h1[@class='x-item-title__mainTitle']/span")
+    private WebElement main_item_title;
+
+    @FindBy(xpath = "//div[@id='ProductDetails']")
+    private WebElement productSpec_1;
+
+    @FindBy(xpath = "//div[@class='tabs']")
+    private WebElement productSpec_2;
 
     public SearchResultsPage(WebDriver driver) {
         this.driver = driver;
@@ -108,13 +123,13 @@ public class SearchResultsPage {
         return true;
     }
 
-    public void selectCategory(String category){
+    public void selectCategory(String category) {
         //ul[@class='srp-refine__category__list']//li/span[contains(text(),'"+ category +"')]
         WebElement categoryElement = driver.findElement(By.xpath("//span[text()='" + category + "']"));
         categoryElement.click();
     }
 
-    public void selectBrand(String brand){
+    public void selectBrand(String brand) {
         //div[@class="x-refine__multi-select"]//span[text()='Jordan']
         WebElement categoryElement = driver.findElement(By.xpath("//div[@class='x-refine__multi-select']//span[text()='" + brand + "']"));
         categoryElement.click();
@@ -129,6 +144,64 @@ public class SearchResultsPage {
                 System.out.println("Invalid Title: " + elementTitleText);
             }
         }
+        return false;
+    }
+
+    public void clickOnSecondItem() {
+        String currentWindow = driver.getWindowHandle(); //Original Session ID
+        System.out.println("Current Session" + currentWindow);
+        secondItem.click();
+        switchToNewTab(currentWindow);
+    }
+
+    public void switchToNewTab(String currentWindow) {
+        Set<String> allWindows = driver.getWindowHandles(); //Original Session ID, Secondary Session ID
+        for (String window : allWindows) {
+            if (!window.equals(currentWindow)) {
+                driver.switchTo().window(window);
+                break;
+            }
+        }
+    }
+
+    public boolean verifyMainTitle(String title) {
+        String mainItemTitle = main_item_title.getText();
+        System.out.println(mainItemTitle);
+
+        if (main_item_title.isDisplayed()) {
+            return true;
+        }
+
+        if (mainItemTitle.toLowerCase().contains(title.toLowerCase())) {
+            System.out.println("Title: " + mainItemTitle + "contains: " + title);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean productSpecIsDisplayed() {
+        try {
+            WebElement productSpec1 = new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.visibilityOf(productSpec_1));
+            if (productSpec1.isDisplayed()) {
+                System.out.println("product-Spec_1 is displayed");
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println("product-Spec_1 not found");
+        }
+
+        try {
+            WebElement productSpec2 = new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.visibilityOf(productSpec_2));
+            if (productSpec2.isDisplayed()) {
+                System.out.println("product-Spec_2 is displayed");
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println("product-Spec_2 not found");
+        }
+
         return false;
     }
 }

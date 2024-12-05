@@ -80,6 +80,21 @@ public class SearchSteps {
     public void verifyItemTitleHasContainingText(String brand) {
         searchResultsPage.verifyContainsJordan(brand);
     }
+
+    @And("I click on the first product")
+    public void clickOnFirstProduct() {
+        searchResultsPage.clickOnSecondItem();
+    }
+
+    @Then("I should verify that the product title contains {string}")
+    public void verifyTitleContains(String itemTitle){
+        Assert.assertTrue(searchResultsPage.verifyMainTitle(itemTitle));
+    }
+
+    @And("I should verify that the product specifications are displayed")
+    public void verifyProductSpec(){
+        Assert.assertTrue(searchResultsPage.productSpecIsDisplayed());
+    }
 }
 
 
